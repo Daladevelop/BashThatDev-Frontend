@@ -9,25 +9,33 @@ var map = {
 	world_tiles:
 			[
 				[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-				[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+				[0,0,0,0,0,0,1,0,0,1,0,0,0,0,0],
 				[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 				[0,0,0,0,0,0,1,1,1,1,1,0,0,0,0],
 				[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-				[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-				[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-				[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-				[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+				[0,0,0,0,0,0,0,0,0,1,0,0,0,0,0],
+				[0,0,0,1,0,0,0,0,0,0,0,0,0,0,0],
+				[0,0,0,0,0,0,0,1,0,0,0,0,0,0,0],
+				[0,0,0,0,0,1,0,0,0,0,0,0,0,0,0],
 				[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 
-			]
+			],
+	players:
+		[
+			{pos_x: 2, pos_y: 2}
+
+
+
+
+		]
 }
 
+isRunning = true; 
 
 // WebSockets
 var sock = null;
-var wsuri = "ws://localhost:9000";
+var wsuri = "ws://daladevelop.se:1337";
  
-window.onload = connect;
 function connect() {
  	sock = new WebSocket(wsuri);
 
@@ -47,8 +55,8 @@ function connect() {
 	}
 };
 
-function send() {
-	var msg = document.getElementById('message').value;
+function send(msg) {
+	
     sock.send(msg);
 };
 
@@ -60,6 +68,7 @@ var GameEngine =  {
 
 	//methods
 	init : function(){
+		connect();
 		this.activeCanvas = document.getElementById('zero');
 		this.inactiveCanvas = document.getElementById('one');
 
@@ -72,7 +81,36 @@ var GameEngine =  {
 		this.sprite = new Image();
 		this.sprite.src = "px/sprite.png";
 
+		evarglice.bind('keydown',[document.body],GameEngine.keyDown);
+		evarglice.bind('keyup',[document.body],GameEngine.keyUp);
+
+
+		window.setInterval(this.loop,10); 
+
 		return true;
+	},
+	
+	keyDown: function(data){
+		
+		if(data.keyCode == 32 || data.keyCode == 37 || data.keyCode == 38 || data.keyCode == 39 || data.keyCode == 40)
+		{
+			console.log(data);
+			keyPress = {type: 'press',keyCode:data.keyCode};
+			console.log(keyPress);
+			
+			//send keypress to server
+			send(JSON.stringify(keyPress));
+			event.preventDefault();
+		}
+	},
+	keyUp: function(data){
+		if(data.keyCode == 32 || data.keyCode == 37 || data.keyCode == 38 || data.keyCode == 39 || data.keyCode == 40){
+			keyPress = {type: 'release',keyCode:data.keyCode};
+			console.log(keyPress);
+			send(JSON.stringify(keyPress));
+			event.preventDefault();
+			return false;
+		}
 	},
 	flip : function(){
 			tmp = this.activeCanvas;
@@ -87,13 +125,14 @@ var GameEngine =  {
 
 	loop: function()
 	{
-
-		this.draw();
+		if(isRunning)
+			GameEngine.draw();
 	},
 
 	draw: function(){
 		this.ctx = this.inactiveCanvas.getContext("2d");
 
+		//Draw the world
 		for(y = 0; y < map.world_height; y++)
 		{
 			for(x = 0; x < map.world_width; x++)
@@ -103,10 +142,17 @@ var GameEngine =  {
 			}
 
 		}
+		
+		//Draw the players
+		for(c = 0; c<map.players.length; c++)
+		{
+			this.ctx.drawImage(this.sprite,2*BLOCK_SIZE, 0, BLOCK_SIZE, BLOCK_SIZE, map.players[c].pos_x * BLOCK_SIZE, map.players[c].pos_y * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
 
-//		this.ctx.drawImage(this.sprite,0,0,BLOCK_SIZE,BLOCK_SIZE, 5 * BLOCK_SIZE, 1 * BLOCK_SIZE,BLOCK_SIZE,BLOCK_SIZE);
+		}
 
 		this.flip();
 	}
 
 }
+
+window.onload = GameEngine.init(); 

@@ -15,20 +15,10 @@ canvas.gamecanvas{
 	position: absolute; 
 	top: 0;  
 	z-index: -100;
+	background-color: #8888ee; 
 }
 
 canvas.gamecanvas.active
 {
 	z-index: 100; 
-}
-
-canvas#one
-{
-	background-color: pink;
-}
-
-canvas#zero
-{
-	background-color: white; 
-
 }
