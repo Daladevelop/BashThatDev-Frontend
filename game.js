@@ -1,8 +1,3 @@
-var console = {
-	log: function(mess) {
-		alert(mess);	 
-	}
-}
 
 // The basics
 var GRID_WIDTH = '960px';
