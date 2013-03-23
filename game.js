@@ -3,6 +3,24 @@
 var GRID_WIDTH = 960;
 var GRID_HEIGHT = 640;
 var BLOCK_SIZE = 64;
+var map = {
+	world_width: 15,
+	world_height:10,
+	world_tiles:
+			[
+				[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+				[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+				[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+				[0,0,0,0,0,0,1,1,1,1,1,0,0,0,0],
+				[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+				[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+				[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+				[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+				[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+				[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+
+			]
+}
 
 
 // WebSockets
@@ -45,6 +63,12 @@ var GameEngine =  {
 		this.activeCanvas = document.getElementById('zero');
 		this.inactiveCanvas = document.getElementById('one');
 
+		this.activeCanvas.setAttribute('width',GRID_WIDTH);
+		this.activeCanvas.setAttribute('height',GRID_HEIGHT);
+
+		this.inactiveCanvas.setAttribute('width',GRID_WIDTH);
+		this.inactiveCanvas.setAttribute('height',GRID_HEIGHT);
+
 		this.sprite = new Image();
 		this.sprite.src = "px/sprite.png";
 
@@ -70,7 +94,17 @@ var GameEngine =  {
 	draw: function(){
 		this.ctx = this.inactiveCanvas.getContext("2d");
 
-		this.ctx.drawImage(this.sprite,0,0,BLOCK_SIZE,BLOCK_SIZE, 5 * BLOCK_SIZE, 1 * BLOCK_SIZE,BLOCK_SIZE,BLOCK_SIZE);
+		for(y = 0; y < map.world_height; y++)
+		{
+			for(x = 0; x < map.world_width; x++)
+			{
+				if(map.world_tiles[y][x])
+					this.ctx.drawImage(this.sprite,0,0,BLOCK_SIZE,BLOCK_SIZE, x * BLOCK_SIZE, y * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE); 
+			}
+
+		}
+
+//		this.ctx.drawImage(this.sprite,0,0,BLOCK_SIZE,BLOCK_SIZE, 5 * BLOCK_SIZE, 1 * BLOCK_SIZE,BLOCK_SIZE,BLOCK_SIZE);
 
 		this.flip();
 	}
