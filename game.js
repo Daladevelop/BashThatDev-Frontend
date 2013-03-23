@@ -1,5 +1,7 @@
-var console = function(mess) {
-	alert(mess);
+var console = {
+	log: function(mess) {
+		alert(mess);	 
+	}
 }
 
 // The basics
