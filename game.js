@@ -1,5 +1,4 @@
 
-
 // The basics
 var GRID_WIDTH = 960;
 var GRID_HEIGHT = 640;
