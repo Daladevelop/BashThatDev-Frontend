@@ -1,0 +1,34 @@
+body{background-color: #eaeaea; }
+
+
+div.gameon{
+	width: 960px; 
+	height: 640px; 
+	margin: 0 auto; 
+	border: 1px solid #696969;
+   	position: relative; 	
+}
+
+canvas.gamecanvas{
+	width: 960px; 
+	height: 640px; 
+	position: absolute; 
+	top: 0;  
+	z-index: -100;
+}
+
+canvas.gamecanvas.active
+{
+	z-index: 100; 
+}
+
+canvas#one
+{
+	background-color: pink;
+}
+
+canvas#two
+{
+	background-color: green; 
+
+}
