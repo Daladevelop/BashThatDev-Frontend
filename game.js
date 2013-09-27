@@ -5,10 +5,12 @@ var GRID_HEIGHT = 640;
 var BLOCK_SIZE = 64;
 map = [];
 isRunning = true; 
-
+gotHello = false;
+goRun = false;
+helloData = [];
 // WebSockets
 var sock = null;
-var wsuri = "ws://daladevelop.se:1337";
+var wsuri = "ws://madbear.biz:1337";
  
 function connect() {
  	sock = new WebSocket(wsuri);
@@ -29,13 +31,22 @@ function connect() {
 		
 		try
 		{
-			map = JSON.parse(e.data);
+			if (!gotHello) {
+				helloData = JSON.parse(e.data);
+				console.log(helloData['pix']['player_1']);
+				GameEngine.setSprite(helloData['pix']['player_1']);
+				gotHello = true;
+			} else {
+				goRun = true;
+				map = JSON.parse(e.data);
+			}
 		}
 		catch(error)
 		{
 			console.log("funkänt");
 		}
-			GameEngine.loop();
+			if (goRun)
+				GameEngine.loop();
 	}
 };
 
@@ -62,7 +73,7 @@ var GameEngine =  {
 		this.inactiveCanvas.setAttribute('height',GRID_HEIGHT);
 
 		this.sprite = new Image();
-		this.sprite.src = "px/sprite.png";
+		//this.sprite.src = "px/sprite.png";
 
 		evarglice.bind('keydown',[document.body],GameEngine.keyDown);
 		evarglice.bind('keyup',[document.body],GameEngine.keyUp);
@@ -79,7 +90,10 @@ var GameEngine =  {
 
 		return true;
 	},
-	
+	/* should be several , add sprite, remove and so on*/
+	setSprite: function (sprite) {
+		this.sprite.src = sprite;
+	},
 	keyDown: function(data){
 		
 		if(data.keyCode == 32 || data.keyCode == 37 || data.keyCode == 38 || data.keyCode == 39 || data.keyCode == 40)
