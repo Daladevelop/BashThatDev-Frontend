@@ -13,8 +13,8 @@
 */
 // The basics
 var GRID_WIDTH = 960;
-var GRID_HEIGHT = 640;
-var BLOCK_SIZE = 64;
+var GRID_HEIGHT = 480;
+var BLOCK_SIZE = 24;
 data = [];
 map = [];
 isRunning = true; 
@@ -23,18 +23,16 @@ goRun = false;
 helloData = [];
 // WebSockets
 var sock = null;
-var wsuri = "ws://madbear.biz:1337";
+var wsuri = "ws://daladevelop.se:1337";
  
 function connect() {
  	sock = new WebSocket(wsuri);
 
 	sock.onopen = function() {
-		console.log("connected to " + wsuri);
 		GameEngine.init(); 
 	}
  
 	sock.onclose = function(e) {
-    	console.log("connection closed (" + e.code + ")");
 		window.setInterval("connect", 1);
 
 		sock = new WebSocket(wsuri);
@@ -49,7 +47,6 @@ function connect() {
 		}
 		catch(error)
 		{
-			console.log("funkänt");
 		}
 		GameEngine.loop();
 	}
@@ -99,18 +96,14 @@ var GameEngine =  {
 	},
 	/* should be several , add sprite, remove and so on*/
 	setSprite: function (sprite) {
-		console.log("Setting sprite to");
-		console.log(sprite.dood); 
 		this.sprite = new Image();
 		this.sprite.src = sprite.dood;
 	},
 	mouseDown : function(data) {
-		console.log(data);
 	},
 	mouseUp: function(data) {
 	},
 	keyDown: function(data){
-		console.log(data.keyCode);
 		if(data.keyCode == 32 || data.keyCode == 37 || data.keyCode == 38 || data.keyCode == 39 || data.keyCode == 40)
 		{
 			if(!GameEngine.keyIsPressed[data.keyCode])
@@ -151,17 +144,13 @@ var GameEngine =  {
 	{
 		if (isRunning){
 		GameEngine.update();
-			console.log("updated");
 			GameEngine.draw();
-			console.log("drawed");
 		}
 	},
 
 	load_pix: function(pix) {
 		/* named obj get pix*/
-		console.log("Loading pix");
 		this.pix = this.pix.concat(pix);
-		console.log(this.pix);
 	},
 	update: function() {
 	/*
@@ -178,13 +167,11 @@ var GameEngine =  {
 		while (data.length != 0) {
 			d = data.shift();
 			recvdata = JSON.parse(d.data);
-			console.log(d);
 			console.log(recvdata);
 
 
 			for (var key in  recvdata){
 					value = recvdata[key];
-					console.log(value);
 				switch (key) {
 					case 'msg': break;
 					case 'pix': GameEngine.setSprite(value); break;
