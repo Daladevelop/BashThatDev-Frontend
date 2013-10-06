@@ -198,17 +198,21 @@ var GameEngine =  {
 				for(y = 0; y < map.world_height; y++)
 				{
 					if(map.world_tiles[x][y])
-						this.ctx.drawImage(this.sprite,0,0,BLOCK_SIZE,BLOCK_SIZE, x * BLOCK_SIZE, y * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE); 
+						this.ctx.drawImage(this.sprite,9*BLOCK_SIZE-4,0,BLOCK_SIZE,BLOCK_SIZE, x * BLOCK_SIZE, y * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE); 
 				}
 
 			}
 
 			//Draw the players
 			if (map.players != undefined) {
+				color = 0;
 				for(c = 0; c < map.players.length; c++)
 				{	
-					this.ctx.drawImage(this.sprite ,2*BLOCK_SIZE, 0, BLOCK_SIZE, BLOCK_SIZE, map.players[c].pos_x * BLOCK_SIZE, map.players[c].pos_y * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
-
+					this.ctx.drawImage(this.sprite ,color*BLOCK_SIZE, 0, BLOCK_SIZE, BLOCK_SIZE, map.players[c].pos_x * BLOCK_SIZE, map.players[c].pos_y * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+					if(color +1 >=5)
+						color = 0;
+					else
+						color = color +1;
 				}
 			}
 			this.flip();
