@@ -1,11 +1,11 @@
-body{background-color: #eaeaea; }
+body{background-color: #000; }
 
 
 div.gameon{
 	width: 960px; 
 	height: 480px; 
 	margin: 0 auto; 
-	border: 1px solid #696969;
+	
    	position: relative; 	
 }
 
