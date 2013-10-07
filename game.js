@@ -22,10 +22,12 @@ isRunning = true;
 gotHello = false;
 goRun = false;
 offset = 0.0;
+user_offset = 0;
 helloData = [];
 // WebSockets
 var sock = null;
-var wsuri = "ws://daladevelop.se:1337";
+var port = 1338;
+var wsuri = "ws://daladevelop.se:"+ port;
  
 function connect() {
  	sock = new WebSocket(wsuri);
@@ -193,8 +195,6 @@ var GameEngine =  {
 		while (data.length != 0) {
 			d = data.shift();
 			recvdata = JSON.parse(d.data);
-			console.log(recvdata);
-
 
 			for (var key in  recvdata){
 					value = recvdata[key];
@@ -207,9 +207,10 @@ var GameEngine =  {
 					case 'world_height': map.world_height = value; break;
 					case 'world_tiles' : map.world_tiles = value; break;
 					case 'music': GameEngine.load_audio(value); break;
-					case 'offset': offset = value; break;
+					case 'camera_offset': offset = value; break;
+					case 'user_offset': user_offset = value; break;
 					//case "pix": GameEngine.load_pix(e); break;
-					default: console.log("undefined data from be");console.log(e); break;
+					default: console.log("undefined data from be");console.log(key, value); break;
 					}
 				}
 		}
@@ -236,9 +237,19 @@ var GameEngine =  {
 				color = 0;
 				for(c = 0; c < map.players.length; c++)
 				{	
-					this.ctx.drawImage(this.sprite ,color*BLOCK_SIZE, 0, BLOCK_SIZE, BLOCK_SIZE, map.players[c].pos_x * BLOCK_SIZE,
-					( map.players[c].pos_y * BLOCK_SIZE )-offset
-					, BLOCK_SIZE, BLOCK_SIZE);
+				// nada
+					if (user_offset != 0) {
+						this.ctx.drawImage(this.sprite ,color*BLOCK_SIZE, 0, BLOCK_SIZE, BLOCK_SIZE, map.players[c].pos_x * BLOCK_SIZE,
+					 user_offset * BLOCK_SIZE,
+					 BLOCK_SIZE, BLOCK_SIZE);
+					} else {
+						this.ctx.drawImage(this.sprite ,color*BLOCK_SIZE, 0, BLOCK_SIZE, BLOCK_SIZE, map.players[c].pos_x * BLOCK_SIZE,
+					 (map.players[c].pos_y) * BLOCK_SIZE,
+					 BLOCK_SIZE, BLOCK_SIZE);
+
+
+					}
+
 					if (map.players[c].in_air) {
 					}
 					if(color +1 >=5)
