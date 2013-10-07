@@ -236,7 +236,9 @@ var GameEngine =  {
 				color = 0;
 				for(c = 0; c < map.players.length; c++)
 				{	
-					this.ctx.drawImage(this.sprite ,color*BLOCK_SIZE, 0, BLOCK_SIZE, BLOCK_SIZE, map.players[c].pos_x * BLOCK_SIZE,( map.players[c].pos_y) * BLOCK_SIZE , BLOCK_SIZE, BLOCK_SIZE);
+					this.ctx.drawImage(this.sprite ,color*BLOCK_SIZE, 0, BLOCK_SIZE, BLOCK_SIZE, map.players[c].pos_x * BLOCK_SIZE,
+					( map.players[c].pos_y * BLOCK_SIZE )-offset
+					, BLOCK_SIZE, BLOCK_SIZE);
 					if (map.players[c].in_air) {
 					}
 					if(color +1 >=5)
