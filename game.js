@@ -27,7 +27,7 @@ helloData = [];
 // WebSockets
 var sock = null;
 var port = 1338;
-var wsuri = "ws://daladevelop.se:"+ port;
+var wsuri = "ws://172.20.90.114:"+ port;
  
 function connect() {
  	sock = new WebSocket(wsuri);
@@ -227,7 +227,8 @@ var GameEngine =  {
 				for(y = 0; y < map.world_height; y++)
 				{
 					if(map.world_tiles[x][y])
-						this.ctx.drawImage(this.sprite,9*BLOCK_SIZE-4,0,BLOCK_SIZE,BLOCK_SIZE, x * BLOCK_SIZE, (y-offset) * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE); 
+						this.ctx.drawImage(this.sprite,9*BLOCK_SIZE-4,0,BLOCK_SIZE,BLOCK_SIZE, x * BLOCK_SIZE, (y - offset) * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+				   			
 				}
 
 			}
@@ -236,27 +237,19 @@ var GameEngine =  {
 			if (map.players != undefined) {
 				color = 0;
 				for(c = 0; c < map.players.length; c++)
-				{	
+				{
 				// nada
-					if (user_offset != 0) {
-						this.ctx.drawImage(this.sprite ,color*BLOCK_SIZE, 0, BLOCK_SIZE, BLOCK_SIZE, map.players[c].pos_x * BLOCK_SIZE,
-					 user_offset * BLOCK_SIZE,
-					 BLOCK_SIZE, BLOCK_SIZE);
-					} else {
-						this.ctx.drawImage(this.sprite ,color*BLOCK_SIZE, 0, BLOCK_SIZE, BLOCK_SIZE, map.players[c].pos_x * BLOCK_SIZE,
-					 (map.players[c].pos_y) * BLOCK_SIZE,
-					 BLOCK_SIZE, BLOCK_SIZE);
+					this.ctx.drawImage(this.sprite, color * BLOCK_SIZE, 0, 
+										BLOCK_SIZE, BLOCK_SIZE, map.players[c].pos_x * BLOCK_SIZE,
+										(map.players[c].pos_y) * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
 
 
 					}
 
-					if (map.players[c].in_air) {
-					}
 					if(color +1 >=5)
 						color = 0;
 					else
 						color = color +1;
-				}
 			}
 			this.flip();
 
