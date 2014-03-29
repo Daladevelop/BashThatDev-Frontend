@@ -27,7 +27,8 @@ helloData = [];
 // WebSockets
 var sock = null;
 var port = 1338;
-var wsuri = "ws://daladevelop.se:"+ port;
+//var wsuri = "ws://daladevelop.se:"+ port;
+var wsuri = "ws://172.20.90.122:1338";
  
 function connect() {
  	sock = new WebSocket(wsuri);
@@ -99,9 +100,9 @@ var GameEngine =  {
 		return true;
 	},
 	/* should be several , add sprite, remove and so on*/
-	setSprite: function (sprite) {
+	setSprite: function (sprites) {
 		this.sprite = new Image();
-		this.sprite.src = sprite.dood;
+		this.sprite.src = sprites[0].data;
 	},
 	mouseDown : function(data) {
 	},
@@ -200,16 +201,27 @@ var GameEngine =  {
 					value = recvdata[key];
 				switch (key) {
 					case 'msg': break;
-					case 'pix': GameEngine.setSprite(value); break;
-					case "players": map.players = value; break;
+					case 'sprites': GameEngine.setSprite(value); break;
+					case "players": 
+						map.players = value;
+						//console.log( value );
+						break;
+
 					case "map": map = value; break;
 					case 'world_width': map.world_width = value; break;
 					case 'world_height': map.world_height = value; break;
 					case 'world_tiles' : map.world_tiles = value; break;
-					case 'music': GameEngine.load_audio(value); break;
+					//case 'music': GameEngine.load_audio(value); break;
 					case 'camera_offset': offset = value; break;
 					case 'user_offset': user_offset = value; break;
 					//case "pix": GameEngine.load_pix(e); break;
+					case 'sound_effects':
+						loadSoundList( value );
+						break;
+					case 'sfx_playlist':
+						console.log( value );
+						play( value );
+						break;
 					default: console.log("undefined data from be");console.log(key, value); break;
 					}
 				}
@@ -256,6 +268,8 @@ var GameEngine =  {
 						color = 0;
 					else
 						color = color +1;
+
+					map.players[ c ].sfx_playlist.forEach( function(a) { play(a); } );
 				}
 			}
 			this.flip();

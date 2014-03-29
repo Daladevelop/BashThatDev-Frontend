@@ -51,24 +51,29 @@ function loadFile(url, id) {
 } 
 
 // Play sound [name] from the sounds object 
-function play(name) { 
-	// Create a source node from the buffer 
-	var src = context.createBufferSource();  
-	src.buffer = sounds[name]; 
-	// Connect to the final output node (the speakers) 
-	src.connect(context.destination); 
-	// Play immediately 
-	src.noteOn(0); 
+function play( name ) { 
+
+	if (sounds[ name ] ) {
+		// Create a source node from the buffer 
+		var src = context.createBufferSource();  
+		src.buffer = sounds[name]; 
+		// Connect to the final output node (the speakers) 
+		src.connect(context.destination); 
+		// Play immediately 
+		src.noteOn(0);
+	}
+
 } 
 
 
 // Load a list (json object) of sounds
-function loadSoundList(list) {
+function loadSoundList( sound_effects ) {
 	
 
+	sounds = {};
 	// Loop through
-	for (i = 0; i < json.length; i++) {
-		var currentEntry = json[i];
+	for (i = 0; i < sound_effects.length; i++) {
+		var currentEntry = sound_effects[i];
 		loadFile(currentEntry.url, currentEntry.name);
 	}
 }
