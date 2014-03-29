@@ -159,39 +159,7 @@ var GameEngine =  {
 		this.pix = this.pix.concat(pix);
 	},
 
-	load_audio: function(e) {
-		console.log("loading audio");
-		console.log(e);
-		console.log(e.url);
-		var me = document.createElement("embed");
-		var ad = document.createElement("audio");
-		var src = document.createElement("source");	
-		src.setAttribute("src", String(e.url));
-		src.setAttribute("type", "audio/mpeg");
-		ad.setAttribute("loop", "");
-		ad.setAttribute("autoplay", "autoplay");
-		ad.setAttribute("hidden","");
-		/*me.setAttribute("autostart", e.autostart);
-		me.setAttribute("hidden",true);
-		me.setAttribute("src", String(e.url));*/
-		ad.appendChild(src);	
-		document.body.appendChild(ad);	
-		//document.body.appendChild(me);	
-		
-	},
-
 	update: function() {
-	/*
-	if (x!gotHello) {
-				console.log(data);
-				console.log(data['pix']);
-				helloData = JSON.parse(data);
-				console.log(helloData['pix']['player_1']);
-				GameEngine.setSprite(helloData['pix']['player_1']);
-				gotHello = true;
-				goRun = true;
-			return 1;
-		}*/
 		while (data.length != 0) {
 			d = data.shift();
 			recvdata = JSON.parse(d.data);
@@ -210,6 +178,11 @@ var GameEngine =  {
 					case 'world_width': map.world_width = value; break;
 					case 'world_height': map.world_height = value; break;
 					case 'world_tiles' : map.world_tiles = value; break;
+
+					case 'load_music':
+						loadMusicFile( value );
+						break;
+
 					//case 'music': GameEngine.load_audio(value); break;
 					case 'camera_offset': offset = value; break;
 					case 'user_offset': user_offset = value; break;
