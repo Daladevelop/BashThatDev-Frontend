@@ -246,12 +246,17 @@ var GameEngine =  {
 				for(c = 0; c < map.players.length; c++)
 				{
 				// nada
+					this.ctx.drawImage(this.sprite, 0, 1 * BLOCK_SIZE,
+										BLOCK_SIZE, BLOCK_SIZE, map.players[c].pos_x * BLOCK_SIZE-7,
+										(map.players[c].pos_y) * BLOCK_SIZE-3, BLOCK_SIZE , BLOCK_SIZE);
 					this.ctx.drawImage(this.sprite, color * BLOCK_SIZE, 0, 
 										BLOCK_SIZE, BLOCK_SIZE, map.players[c].pos_x * BLOCK_SIZE,
 										(map.players[c].pos_y) * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+					this.ctx.drawImage(this.sprite, 10, 1 * BLOCK_SIZE,
+										BLOCK_SIZE, BLOCK_SIZE, map.players[c].pos_x * BLOCK_SIZE-4,
+										(map.players[c].pos_y) * BLOCK_SIZE-3, BLOCK_SIZE , BLOCK_SIZE);
 
-
-					}
+				}
 
 					if(color +1 >=5)
 						color = 0;
@@ -260,7 +265,6 @@ var GameEngine =  {
 
 					map.players[ c ].sfx_playlist.forEach( function(a) { play(a); } );
 				}
-			}
 			this.flip();
 
 		}
