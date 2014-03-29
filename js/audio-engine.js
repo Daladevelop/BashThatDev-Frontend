@@ -20,6 +20,7 @@
 
 var context; //audio context 
 var sounds = {};
+var music = {};
 
 //init the sound system 
 function init() { 
@@ -76,5 +77,27 @@ function loadSoundList( sound_effects ) {
 		var currentEntry = sound_effects[i];
 		loadFile(currentEntry.url, currentEntry.name);
 	}
+}
+
+function loadMusicFile( json ) {
+	var req = new XMLHttpRequest(); 
+	req.open( "GET", json.url, true ); 
+	req.responseType = "arraybuffer"; 
+	req.onload = function() { 
+		//decode the loaded data 
+		context.decodeAudioData( req.response, function(buffer) { 
+			music['file'] = buffer;
+			music['loop_start'] = json.loop_start;
+			music['loop_point'] = json.loop_point;
+
+			var src = context.createBufferSource();  
+			src.buffer = music['file']; 
+			// Connect to the final output node (the speakers) 
+			src.connect(context.destination); 
+			// Play immediately 
+			src.noteOn(0);
+		}); 
+	}; 
+	req.send();
 }
 
