@@ -218,10 +218,6 @@ var GameEngine =  {
 					case 'sound_effects':
 						loadSoundList( value );
 						break;
-					case 'sfx_playlist':
-						console.log( value );
-						play( value );
-						break;
 					default: console.log("undefined data from be");console.log(key, value); break;
 					}
 				}
