@@ -12,29 +12,31 @@
 			}
 */
 // The basics
+var fx = !(window.mozInnerScreenX == null);
 var GRID_WIDTH = 960;
-var GRID_HEIGHT = 640;
-var BLOCK_SIZE = 64;
+var GRID_HEIGHT = 480;
+var BLOCK_SIZE = 24;
 data = [];
 map = [];
 isRunning = true; 
 gotHello = false;
 goRun = false;
+offset = 0.0;
+user_offset = 0;
 helloData = [];
 // WebSockets
 var sock = null;
-var wsuri = "ws://madbear.biz:1337";
+var port = 1338;
+var wsuri = "ws://daladevelop.se:"+ port;
  
 function connect() {
  	sock = new WebSocket(wsuri);
 
 	sock.onopen = function() {
-		console.log("connected to " + wsuri);
 		GameEngine.init(); 
 	}
  
 	sock.onclose = function(e) {
-    	console.log("connection closed (" + e.code + ")");
 		window.setInterval("connect", 1);
 
 		sock = new WebSocket(wsuri);
@@ -49,7 +51,6 @@ function connect() {
 		}
 		catch(error)
 		{
-			console.log("funkänt");
 		}
 		GameEngine.loop();
 	}
@@ -99,18 +100,14 @@ var GameEngine =  {
 	},
 	/* should be several , add sprite, remove and so on*/
 	setSprite: function (sprite) {
-		console.log("Setting sprite to");
-		console.log(sprite.dood); 
 		this.sprite = new Image();
 		this.sprite.src = sprite.dood;
 	},
 	mouseDown : function(data) {
-		console.log(data);
 	},
 	mouseUp: function(data) {
 	},
 	keyDown: function(data){
-		console.log(data.keyCode);
 		if(data.keyCode == 32 || data.keyCode == 37 || data.keyCode == 38 || data.keyCode == 39 || data.keyCode == 40)
 		{
 			if(!GameEngine.keyIsPressed[data.keyCode])
@@ -122,7 +119,8 @@ var GameEngine =  {
 
 				GameEngine.keyIsPressed[data.keyCode] = 1;
 			}
-		event.preventDefault();
+	if (fx){return false; }
+			event.preventDefault();
 		}
 	},
 	keyUp: function(data){
@@ -130,8 +128,9 @@ var GameEngine =  {
 			keyPress = {type: 'released',keyCode:data.keyCode};
 			send(JSON.stringify(keyPress));
 
-			event.preventDefault();
 			GameEngine.keyIsPressed[data.keyCode] = 0; 
+			if (fx){return false; }
+			event.preventDefault();
 			return false;
 		}
 	},
@@ -151,18 +150,36 @@ var GameEngine =  {
 	{
 		if (isRunning){
 		GameEngine.update();
-			console.log("updated");
 			GameEngine.draw();
-			console.log("drawed");
 		}
 	},
 
 	load_pix: function(pix) {
 		/* named obj get pix*/
-		console.log("Loading pix");
 		this.pix = this.pix.concat(pix);
-		console.log(this.pix);
 	},
+
+	load_audio: function(e) {
+		console.log("loading audio");
+		console.log(e);
+		console.log(e.url);
+		var me = document.createElement("embed");
+		var ad = document.createElement("audio");
+		var src = document.createElement("source");	
+		src.setAttribute("src", String(e.url));
+		src.setAttribute("type", "audio/mpeg");
+		ad.setAttribute("loop", "");
+		ad.setAttribute("autoplay", "autoplay");
+		ad.setAttribute("hidden","");
+		/*me.setAttribute("autostart", e.autostart);
+		me.setAttribute("hidden",true);
+		me.setAttribute("src", String(e.url));*/
+		ad.appendChild(src);	
+		document.body.appendChild(ad);	
+		//document.body.appendChild(me);	
+		
+	},
+
 	update: function() {
 	/*
 	if (x!gotHello) {
@@ -178,13 +195,9 @@ var GameEngine =  {
 		while (data.length != 0) {
 			d = data.shift();
 			recvdata = JSON.parse(d.data);
-			console.log(d);
-			console.log(recvdata);
-
 
 			for (var key in  recvdata){
 					value = recvdata[key];
-					console.log(value);
 				switch (key) {
 					case 'msg': break;
 					case 'pix': GameEngine.setSprite(value); break;
@@ -193,8 +206,11 @@ var GameEngine =  {
 					case 'world_width': map.world_width = value; break;
 					case 'world_height': map.world_height = value; break;
 					case 'world_tiles' : map.world_tiles = value; break;
+					case 'music': GameEngine.load_audio(value); break;
+					case 'camera_offset': offset = value; break;
+					case 'user_offset': user_offset = value; break;
 					//case "pix": GameEngine.load_pix(e); break;
-					default: console.log("undefined data from be");console.log(e); break;
+					default: console.log("undefined data from be");console.log(key, value); break;
 					}
 				}
 		}
@@ -211,17 +227,35 @@ var GameEngine =  {
 				for(y = 0; y < map.world_height; y++)
 				{
 					if(map.world_tiles[x][y])
-						this.ctx.drawImage(this.sprite,0,0,BLOCK_SIZE,BLOCK_SIZE, x * BLOCK_SIZE, y * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE); 
+						this.ctx.drawImage(this.sprite,9*BLOCK_SIZE-4,0,BLOCK_SIZE,BLOCK_SIZE, x * BLOCK_SIZE, (y-offset) * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE); 
 				}
 
 			}
 
 			//Draw the players
 			if (map.players != undefined) {
+				color = 0;
 				for(c = 0; c < map.players.length; c++)
 				{	
-					this.ctx.drawImage(this.sprite ,2*BLOCK_SIZE, 0, BLOCK_SIZE, BLOCK_SIZE, map.players[c].pos_x * BLOCK_SIZE, map.players[c].pos_y * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+				// nada
+					if (user_offset != 0) {
+						this.ctx.drawImage(this.sprite ,color*BLOCK_SIZE, 0, BLOCK_SIZE, BLOCK_SIZE, map.players[c].pos_x * BLOCK_SIZE,
+					 user_offset * BLOCK_SIZE,
+					 BLOCK_SIZE, BLOCK_SIZE);
+					} else {
+						this.ctx.drawImage(this.sprite ,color*BLOCK_SIZE, 0, BLOCK_SIZE, BLOCK_SIZE, map.players[c].pos_x * BLOCK_SIZE,
+					 (map.players[c].pos_y) * BLOCK_SIZE,
+					 BLOCK_SIZE, BLOCK_SIZE);
 
+
+					}
+
+					if (map.players[c].in_air) {
+					}
+					if(color +1 >=5)
+						color = 0;
+					else
+						color = color +1;
 				}
 			}
 			this.flip();
