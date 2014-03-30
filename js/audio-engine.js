@@ -26,7 +26,7 @@ var music = {};
 function init() { 
 	try { 
 		// Make an audio context and try to make it "future safe".
-		window.AudioContext = window.AudioContext || window.webkitAudioContext;
+		window.AudioContext = window.AudioContext || window.webkitAudioContext || window.mozAudioContext;
 		context = new AudioContext();
 	} catch(e) { 
 		alert('you need webaudio support'); 
@@ -61,7 +61,7 @@ function play( name ) {
 		// Connect to the final output node (the speakers) 
 		src.connect(context.destination); 
 		// Play immediately 
-		src.noteOn(0);
+		src.start(0);
 	}
 
 } 
