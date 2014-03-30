@@ -212,23 +212,48 @@ var GameEngine =  {
 				}
 
 			}
-
+			level = 2;
 			//Draw the players
 			if (map.players != undefined) {
 				color = 0;
 				for(c = 0; c < map.players.length; c++)
 				{
 				// nada
-					this.ctx.drawImage(this.sprite, 0, 1 * BLOCK_SIZE,
-										BLOCK_SIZE, BLOCK_SIZE, map.players[c].pos_x * BLOCK_SIZE-7,
-										(map.players[c].pos_y) * BLOCK_SIZE-3, BLOCK_SIZE , BLOCK_SIZE);
-					this.ctx.drawImage(this.sprite, color * BLOCK_SIZE, 0, 
+					//moose left horn
+					if(map.players[c].direction)
+					{
+						this.ctx.drawImage(this.sprite, 55, 2 * BLOCK_SIZE,
+											BLOCK_SIZE+10, BLOCK_SIZE+5, map.players[c].pos_x *BLOCK_SIZE + (map.players[c].direction *(12)),
+											(map.players[c].pos_y) * BLOCK_SIZE-18, BLOCK_SIZE +10 , BLOCK_SIZE+5);
+					}
+					else
+					{
+						this.ctx.drawImage(this.sprite, 1*BLOCK_SIZE, 2 * BLOCK_SIZE,
+											BLOCK_SIZE+10, BLOCK_SIZE+5, map.players[c].pos_x *BLOCK_SIZE-20,
+											(map.players[c].pos_y) * BLOCK_SIZE-18, BLOCK_SIZE+10  , BLOCK_SIZE +5);
+
+
+					}
+					//moose
+					this.ctx.drawImage(this.sprite, color * BLOCK_SIZE, map.players[c].direction * BLOCK_SIZE, 
 										BLOCK_SIZE, BLOCK_SIZE, map.players[c].pos_x * BLOCK_SIZE,
 										(map.players[c].pos_y) * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
-					this.ctx.drawImage(this.sprite, 10, 1 * BLOCK_SIZE,
-										BLOCK_SIZE, BLOCK_SIZE, map.players[c].pos_x * BLOCK_SIZE-4,
-										(map.players[c].pos_y) * BLOCK_SIZE-3, BLOCK_SIZE , BLOCK_SIZE);
-
+					
+					if(map.players[c].direction)
+					{
+						this.ctx.drawImage(this.sprite, 1*BLOCK_SIZE, 2 * BLOCK_SIZE,
+											BLOCK_SIZE+10, BLOCK_SIZE+5, map.players[c].pos_x *BLOCK_SIZE-20,
+											(map.players[c].pos_y) * BLOCK_SIZE-18, BLOCK_SIZE+10  , BLOCK_SIZE +5);
+					}
+					else{
+					//moose right horn
+//					this.ctx.drawImage(this.sprite, 10, 2 * BLOCK_SIZE,
+//										BLOCK_SIZE, BLOCK_SIZE, map.players[c].pos_x * BLOCK_SIZE-4,
+//										(map.players[c].pos_y) * BLOCK_SIZE-3, BLOCK_SIZE , BLOCK_SIZE);
+						this.ctx.drawImage(this.sprite, 55, 2 * BLOCK_SIZE,
+											BLOCK_SIZE+10, BLOCK_SIZE+5, map.players[c].pos_x *BLOCK_SIZE + (map.players[c].direction *(12)),
+											(map.players[c].pos_y) * BLOCK_SIZE-18, BLOCK_SIZE +10 , BLOCK_SIZE+5);
+					}
 				}
 
 					if(color +1 >=5)
