@@ -254,14 +254,16 @@ var GameEngine =  {
 											BLOCK_SIZE+10, BLOCK_SIZE+5, map.players[c].pos_x *BLOCK_SIZE + (map.players[c].direction *(12)),
 											(map.players[c].pos_y) * BLOCK_SIZE-18, BLOCK_SIZE +10 , BLOCK_SIZE+5);
 					}
+
+					// Play any sound assocciated with the player.
+					map.players[ c ].sfx_playlist.forEach( function(a) { play(a); } );
+
 				}
 
 					if(color +1 >=5)
 						color = 0;
 					else
-						color = color +1;
-
-					map.players[ c ].sfx_playlist.forEach( function(a) { play(a); } );
+						color = color +1;	
 				}
 			this.flip();
 
