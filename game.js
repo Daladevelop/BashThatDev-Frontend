@@ -27,7 +27,7 @@ helloData = [];
 // WebSockets
 var sock = null;
 var port = 1338;
-var wsuri = "ws://localhost:"+ port;
+var wsuri = "ws://moosegame.jump:"+ port;
  
 function connect() {
  	sock = new WebSocket(wsuri);
